@@ -74,7 +74,7 @@
             overflow-x: hidden;
         }
 
-        /* Double Door Opening Overlay Animation (Slower, Smooth Swing) */
+        /* Double Door Opening Overlay Animation (Slower 5s Swing) */
         #doorOverlay {
             position: fixed;
             inset: 0;
@@ -82,7 +82,7 @@
             display: flex;
             background: #12100E;
             overflow: hidden;
-            transition: opacity 1s ease 1s;
+            transition: opacity 1.2s ease 1.5s;
         }
 
         .door-panel {
@@ -90,7 +90,7 @@
             height: 100%;
             background: #1A293B;
             position: relative;
-            transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 5s cubic-bezier(0.25, 1, 0.5, 1);
             border: 2px solid #C5A059;
             display: flex;
             flex-direction: column;
@@ -141,23 +141,49 @@
             align-items: center;
         }
 
-        /* Inline Top Navigation Bar */
+        /* Inline Top Navigation Bar & Collapsible Menu */
         .inline-nav-bar {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            background: rgba(251, 248, 243, 0.85);
+            padding: 10px 16px;
+            background: rgba(251, 248, 243, 0.90);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.4);
             z-index: 20;
+            position: relative;
+        }
+
+        .nav-menu-drawer {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(251, 248, 243, 0.98);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.4);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 16px;
+            transform: translateY(-10%);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .nav-menu-drawer.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .nav-music-btn {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: rgba(197, 160, 89, 0.15);
             border: 1px solid rgba(197, 160, 89, 0.6);
@@ -170,25 +196,27 @@
         }
 
         .nav-music-btn svg {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             fill: #C5A059;
         }
 
         .nav-pill-btn {
             font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.3px;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            padding: 5px 6px;
-            border-radius: 18px;
+            padding: 8px 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 8px;
             font-weight: 600;
+            width: 100%;
+            justify-content: center;
         }
 
         .nav-pill-rsvp {
@@ -199,33 +227,33 @@
 
         .nav-pill-recipe {
             color: #233246;
-            background: transparent;
-            border: 1px solid rgba(35, 50, 70, 0.35);
+            background: #EAE3D2;
+            border: 1px solid rgba(35, 50, 70, 0.2);
         }
 
         .nav-pill-gift {
             color: #C5A059;
-            background: transparent;
-            border: 1px solid rgba(197, 160, 89, 0.4);
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid rgba(197, 160, 89, 0.3);
         }
 
         .nav-pill-video {
             color: #6F5038;
-            background: transparent;
-            border: 1px solid rgba(111, 80, 56, 0.35);
+            background: rgba(111, 80, 56, 0.1);
+            border: 1px solid rgba(111, 80, 56, 0.3);
         }
 
         /* Compact & Transparent Wax Seal Target */
         .wax-seal-hotspot {
-            width: 64px;
-            height: 64px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             background: transparent;
             border: none;
             outline: none;
             cursor: pointer;
             position: absolute;
-            top: 57.5%;
+            top: 73.5%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 30;
@@ -282,18 +310,28 @@
 
     <div class="mobile-card-frame flex flex-col justify-start relative text-earth-900">
 
-        <!-- Inline Top Navigation Bar -->
+        <!-- Inline Top Navigation Bar with Collapsible Menu -->
         <nav class="inline-nav-bar">
             <button id="musicToggleBtn" onclick="toggleAudioExplicit(event)" aria-label="Toggle music" class="nav-music-btn" title="Toggle Background Music">
                 <svg id="musicIcon" viewBox="0 0 24 24">
                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                 </svg>
             </button>
-            <div class="flex gap-1">
-                <a href="#rsvp-section" class="nav-pill-btn nav-pill-rsvp">RSVP</a>
-                <a href="#recipe-section" class="nav-pill-btn nav-pill-recipe">Recipe</a>
-                <a href="#gifting-section" class="nav-pill-btn nav-pill-gift">Gifts</a>
-                <a href="#video-section" class="nav-pill-btn nav-pill-video">Video</a>
+
+            <div class="font-cinzel text-[10px] tracking-[0.2em] uppercase font-bold text-earth-700">
+                J & C Wedding
+            </div>
+
+            <button onclick="toggleNavMenu(event)" aria-label="Toggle Navigation Menu" class="nav-music-btn" title="Menu">
+                <i class="fas fa-bars text-xs"></i>
+            </button>
+
+            <!-- Collapsible Drawer -->
+            <div id="navMenuDrawer" class="nav-menu-drawer">
+                <a href="#rsvp-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-rsvp"><i class="fas fa-envelope-open-text"></i> RSVP & Confirmation</a>
+                <a href="#recipe-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-recipe"><i class="fas fa-utensils"></i> Family Recipe</a>
+                <a href="#gifting-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-gift"><i class="fas fa-gift"></i> Gifting Registry</a>
+                <a href="#video-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-video"><i class="fas fa-video"></i> Video Guestbook</a>
             </div>
         </nav>
 
@@ -305,8 +343,8 @@
         <!-- HERO COVER PAGE (With Toile Card Image Background) -->
         <section class="hero-section-bg border-b border-[#D5C9B1] overflow-hidden z-10 pb-2">
             
-            <!-- Transparent Clickable Wax Seal Hotspot Target -->
-            <button onclick="toggleWaxSeal(event)" id="waxSealBtn" class="wax-seal-hotspot" title="Tap Wax Seal for Blessing"></button>
+            <!-- Transparent Clickable Wax Seal Hotspot Target - Aligned to Gold Wax Seal -->
+            <button onclick="toggleWaxSeal(event)" id="waxSealBtn" class="wax-seal-hotspot" title="Tap Wax Seal for Blessing" style="top: 73.5%;"></button>
 
             <!-- Text Prompt below Wax Seal Target -->
             <div class="mt-auto mb-10 z-20 text-center">
@@ -559,16 +597,6 @@
             </form>
         </section>
 
-        <!-- 3. PREFERRED GIFTING SECTION -->
-        <section id="gifting-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
-            <div class="text-center mb-5">
-                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Wedding Registry</span>
-                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Gifting & Well Wishes</h2>
-                <p class="font-sans text-[11px] text-earth-500 mt-0.5">Your presence is our greatest gift. Should you wish to bless us with a token, monetary gifts are warmly preferred.</p>
-                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
-            </div>
-        </section>
-
         <!-- 4. VIDEO MESSAGE BOOTH SECTION -->
         <section id="video-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/40 relative z-10">
             <div class="text-center mb-5">
@@ -662,12 +690,33 @@
             const doors = document.getElementById('doorOverlay');
             if (doors) {
                 doors.classList.add('doors-open');
+                // Trigger video play immediately as doors swing open
+                setTimeout(() => {
+                    playIntroVideo();
+                }, 200);
                 setTimeout(() => {
                     doors.style.display = 'none';
-                    playIntroVideo();
-                }, 2000);
+                }, 4800);
             }
         }
+
+        function toggleNavMenu(e) {
+            if (e) e.stopPropagation();
+            const drawer = document.getElementById('navMenuDrawer');
+            if (drawer) {
+                drawer.classList.toggle('open');
+            }
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const drawer = document.getElementById('navMenuDrawer');
+            if (drawer && drawer.classList.contains('open')) {
+                if (!e.target.closest('.inline-nav-bar')) {
+                    drawer.classList.remove('open');
+                }
+            }
+        });
 
         function playIntroVideo() {
             const videoOverlay = document.getElementById('introVideoOverlay');
