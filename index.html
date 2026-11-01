@@ -74,7 +74,7 @@
             overflow-x: hidden;
         }
 
-        /* Double Door Opening Overlay Animation */
+        /* Double Door Opening Overlay Animation (Slower, Smooth Swing) */
         #doorOverlay {
             position: fixed;
             inset: 0;
@@ -82,7 +82,7 @@
             display: flex;
             background: #12100E;
             overflow: hidden;
-            transition: opacity 0.8s ease 0.5s;
+            transition: opacity 1s ease 1s;
         }
 
         .door-panel {
@@ -90,7 +90,7 @@
             height: 100%;
             background: #1A293B;
             position: relative;
-            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
             border: 2px solid #C5A059;
             display: flex;
             flex-direction: column;
@@ -109,11 +109,11 @@
         }
 
         .doors-open .door-left {
-            transform: rotateY(-105deg);
+            transform: rotateY(-110deg);
         }
 
         .doors-open .door-right {
-            transform: rotateY(105deg);
+            transform: rotateY(110deg);
         }
 
         /* Intro Video Container Overlay */
@@ -177,18 +177,24 @@
 
         .nav-pill-btn {
             font-family: 'Cinzel', serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.5px;
+            font-size: 0.6rem;
+            letter-spacing: 0.3px;
             text-transform: uppercase;
-            padding: 5px 8px;
+            padding: 5px 6px;
             border-radius: 18px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             font-weight: 600;
+        }
+
+        .nav-pill-rsvp {
+            color: #FFFFFF;
+            background: #233246;
+            border: 1px solid #233246;
         }
 
         .nav-pill-recipe {
@@ -197,16 +203,16 @@
             border: 1px solid rgba(35, 50, 70, 0.35);
         }
 
+        .nav-pill-gift {
+            color: #C5A059;
+            background: transparent;
+            border: 1px solid rgba(197, 160, 89, 0.4);
+        }
+
         .nav-pill-video {
             color: #6F5038;
             background: transparent;
             border: 1px solid rgba(111, 80, 56, 0.35);
-        }
-
-        .nav-pill-rsvp {
-            color: #FFFFFF;
-            background: #233246;
-            border: 1px solid #233246;
         }
 
         /* Compact & Transparent Wax Seal Target */
@@ -257,15 +263,15 @@
     <div id="doorOverlay">
         <div class="door-panel door-left">
             <div class="absolute inset-4 border border-[#C5A059]/30 pointer-events-none"></div>
-            <div class="text-[#C5A059] font-cinzel text-xs tracking-[0.3em] uppercase rotate-[-90deg] whitespace-nowrap opacity-70">Château de l'Amour</div>
+            <div class="text-[#C5A059] font-cinzel text-xs tracking-[0.3em] uppercase rotate-[-90deg] whitespace-nowrap opacity-70">St. James the Greater Church | Vista Villa DSB</div>
         </div>
         <div class="door-panel door-right">
             <div class="absolute inset-4 border border-[#C5A059]/30 pointer-events-none"></div>
-            <!-- Central Interactive Open Button -->
-            <div class="absolute -left-10 z-20">
-                <button onclick="startOpeningSequence()" class="group relative w-20 h-20 rounded-full bg-gradient-to-br from-[#D4AF37] via-[#AA7C11] to-[#6E4E08] shadow-2xl flex items-center justify-center border-2 border-[#FFE5A3] cursor-pointer hover:scale-105 transition-transform">
-                    <span class="font-serif text-xl font-bold text-[#3A2200] tracking-tighter">J | C</span>
-                    <div class="absolute -bottom-8 whitespace-nowrap text-[8.5px] font-cinzel tracking-widest text-[#C5A059] uppercase bg-[#12100E]/90 px-2 py-0.5 rounded-full border border-[#C5A059]/40">
+            <!-- Central Interactive Wax Seal Image Button -->
+            <div class="absolute -left-12 z-20">
+                <button onclick="startOpeningSequence()" class="group relative w-24 h-24 rounded-full bg-transparent p-0 border-none cursor-pointer hover:scale-105 transition-transform focus:outline-none" title="Click Wax Seal to Open">
+                    <img src="https://erbjoi.github.io/Digital-Wedding-Invite/waxseal.png" alt="Gold Wax Seal" class="w-24 h-24 rounded-full object-cover shadow-2xl border-2 border-[#FFE5A3]">
+                    <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[8.5px] font-cinzel tracking-widest text-[#C5A059] uppercase bg-[#12100E]/90 px-2 py-0.5 rounded-full border border-[#C5A059]/40">
                         Open Invitation
                     </div>
                 </button>
@@ -283,16 +289,11 @@
                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                 </svg>
             </button>
-            <div class="flex gap-1.5">
-                <a href="#recipe-section" class="nav-pill-btn nav-pill-recipe">
-                    <i class="fas fa-utensils text-[8px]"></i> Recipe
-                </a>
-                <a href="#video-section" class="nav-pill-btn nav-pill-video">
-                    <i class="fas fa-video text-[8px]"></i> Video
-                </a>
-                <a href="#rsvp-section" class="nav-pill-btn nav-pill-rsvp">
-                    RSVP
-                </a>
+            <div class="flex gap-1">
+                <a href="#rsvp-section" class="nav-pill-btn nav-pill-rsvp">RSVP</a>
+                <a href="#recipe-section" class="nav-pill-btn nav-pill-recipe">Recipe</a>
+                <a href="#gifting-section" class="nav-pill-btn nav-pill-gift">Gifts</a>
+                <a href="#video-section" class="nav-pill-btn nav-pill-video">Video</a>
             </div>
         </nav>
 
@@ -354,8 +355,130 @@
             </div>
         </section>
 
+        <!-- BIBLE VERSE SECTION -->
+        <section class="p-8 border-b border-hydrangea-200 text-center relative z-10 flex flex-col items-center justify-center min-h-[320px]" style="background-image: url('https://erbjoi.github.io/Digital-Wedding-Invite/Border.jpg'); background-size: cover; background-position: center;">
+            <div class="absolute inset-0 bg-[#FBF8F3]/85 backdrop-blur-xs"></div>
+            <div class="relative z-10 max-w-xs space-y-3 p-4">
+                <i class="fas fa-quote-left text-[#C5A059] text-xl opacity-80"></i>
+                <p class="font-serif italic text-base sm:text-lg text-earth-900 leading-relaxed font-medium">
+                    "Where your treasure is, there your heart will be also."
+                </p>
+                <div class="w-8 h-[1px] bg-[#C5A059] mx-auto"></div>
+                <span class="font-cinzel text-xs tracking-[0.2em] font-bold text-hydrangea-500 uppercase block">
+                    — Matthew 6:21
+                </span>
+            </div>
+        </section>
+
+        <!-- EVENT DETAILS & VENUE SECTION -->
+        <section class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Order of Celebration</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Ceremony & Reception</h2>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Ceremony Card -->
+                <div class="paper-card p-4 rounded-xl text-center space-y-2">
+                    <div class="w-10 h-10 rounded-full bg-hydrangea-100 text-hydrangea-500 mx-auto flex items-center justify-center text-sm">
+                        <i class="fas fa-church"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xs font-bold uppercase tracking-wider text-earth-900">Ceremony</h3>
+                    <p class="font-serif text-base font-bold text-hydrangea-500">St. James the Greater</p>
+                    <p class="text-[11px] text-earth-700 leading-tight">Hacienda Mana-ul, Brgy. Matab-ang<br>Talisay City, Negros Occidental</p>
+                    <div class="inline-block px-3 py-1 bg-hydrangea-50 rounded-full border border-hydrangea-200 text-[10px] font-cinzel font-semibold text-hydrangea-900">
+                        <i class="far fa-clock mr-1"></i> 1:30 PM
+                    </div>
+                </div>
+
+                <!-- Reception Card -->
+                <div class="paper-card p-4 rounded-xl text-center space-y-2">
+                    <div class="w-10 h-10 rounded-full bg-earth-100 text-earth-500 mx-auto flex items-center justify-center text-sm">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xs font-bold uppercase tracking-wider text-earth-900">Reception</h3>
+                    <p class="font-serif text-base font-bold text-earth-700">Vista Villa DSB</p>
+                    <p class="text-[11px] text-earth-700 leading-tight">Purok Kumaliskis, Barangay Kumaliskis<br>Don Salvador Benedicto (DSB), Negros Occidental</p>
+                    <div class="flex justify-center gap-2 pt-1">
+                        <span class="px-2.5 py-0.5 bg-earth-100 rounded-full border border-earth-300 text-[9px] font-cinzel font-semibold text-earth-900">
+                            <i class="far fa-clock mr-1"></i> 4:00 PM Reception
+                        </span>
+                        <span class="px-2.5 py-0.5 bg-earth-100 rounded-full border border-earth-300 text-[9px] font-cinzel font-semibold text-earth-900">
+                            <i class="far fa-clock mr-1"></i> 6:00 PM Dinner
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DRESS CODE & COLOR PALETTE SECTION -->
+        <section class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/40 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Attire & Aesthetics</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Dress Code & Color Palette</h2>
+                <p class="font-sans text-[11px] text-earth-500 mt-0.5">Formal / Semi-Formal Chic. We kindly request guests to wear shades inspired by our palette.</p>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+
+            <div class="paper-card p-4 rounded-xl space-y-4">
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #6F5038;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Brown</span>
+                        <span class="text-[8px] text-earth-400">#6F5038</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #CDDFF0;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Light Azure</span>
+                        <span class="text-[8px] text-earth-400">#CDDFF0</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #AAA091;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Stone</span>
+                        <span class="text-[8px] text-earth-400">#AAA091</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #D6C3A7;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Champagne</span>
+                        <span class="text-[8px] text-earth-400">#D6C3A7</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #92966F;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Sage Green</span>
+                        <span class="text-[8px] text-earth-400">#92966F</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #F2E1B5;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Butter Yellow</span>
+                        <span class="text-[8px] text-earth-400">#F2E1B5</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #A5AA38;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Desert Sage</span>
+                        <span class="text-[8px] text-earth-400">#A5AA38</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full shadow-inner border border-black/10" style="background-color: #777657;"></div>
+                        <span class="text-[9px] font-cinzel text-earth-700 mt-1 font-semibold">Olive</span>
+                        <span class="text-[8px] text-earth-400">#777657</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PREFERRED GIFTING SECTION -->
+        <section id="gifting-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Wedding Registry</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Gifting & Well Wishes</h2>
+                <p class="font-sans text-[11px] text-earth-500 mt-0.5">Your presence is our greatest gift. Should you wish to bless us with a token, monetary gifts are warmly preferred.</p>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+        </section>
+
         <!-- 1. RSVP FORM -->
-        <section id="rsvp-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+        <section id="rsvp-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/30 relative z-10">
             <div class="text-center mb-5">
                 <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Répondez S'il Vous Plaît</span>
                 <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">RSVP & Guest Confirmation</h2>
@@ -407,7 +530,7 @@
         </section>
 
         <!-- 2. RECIPE SECTION -->
-        <section id="recipe-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/30 relative z-10">
+        <section id="recipe-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
             <div class="text-center mb-5">
                 <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Kitchen Memories</span>
                 <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Share A Family Recipe</h2>
@@ -436,8 +559,18 @@
             </form>
         </section>
 
-        <!-- 3. VIDEO MESSAGE BOOTH SECTION -->
-        <section id="video-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+        <!-- 3. PREFERRED GIFTING SECTION -->
+        <section id="gifting-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Wedding Registry</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Gifting & Well Wishes</h2>
+                <p class="font-sans text-[11px] text-earth-500 mt-0.5">Your presence is our greatest gift. Should you wish to bless us with a token, monetary gifts are warmly preferred.</p>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+        </section>
+
+        <!-- 4. VIDEO MESSAGE BOOTH SECTION -->
+        <section id="video-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/40 relative z-10">
             <div class="text-center mb-5">
                 <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Virtual Guestbook</span>
                 <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Upload a Video Message</h2>
@@ -532,7 +665,7 @@
                 setTimeout(() => {
                     doors.style.display = 'none';
                     playIntroVideo();
-                }, 1100);
+                }, 2000);
             }
         }
 
@@ -641,6 +774,18 @@
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
+
+        function copyToClipboard(text, btnElement) {
+            document.execCommand('copy');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text);
+            }
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+            setTimeout(() => {
+                btnElement.innerHTML = originalText;
+            }, 2000);
+        }
 
         function previewVideoFilename(input) {
             if (input.files && input.files[0]) {
