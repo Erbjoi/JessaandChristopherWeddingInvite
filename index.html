@@ -860,7 +860,7 @@
         // 1. Create a Google Sheet with tabs: "RSVP", "Recipes", and "Videos".
         // 2. Attach a Google Apps Script to the Sheet handling doPost(e) for each form type.
         // 3. Paste your deployed Web App URL below:
-        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec';
 
         function handleRSVPSubmit(e) {
             e.preventDefault();
@@ -878,7 +878,7 @@
                 attendance: attendance
             };
 
-            if (GOOGLE_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+            if (GOOGLE_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec') {
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(payload)
@@ -949,7 +949,7 @@
                 };
 
                 // If GOOGLE_SCRIPT_URL is configured, send to Google Drive
-                if (GOOGLE_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                if (GOOGLE_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec') {
                     fetch(GOOGLE_SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify(payload)
