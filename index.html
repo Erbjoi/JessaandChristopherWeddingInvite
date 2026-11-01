@@ -597,6 +597,14 @@
                     Submit Recipe Card
                 </button>
             </form>
+
+            <div id="recipeConfirmation" class="hidden paper-card p-5 rounded-xl text-center space-y-3">
+                <div class="w-12 h-12 rounded-full bg-hydrangea-100 text-hydrangea-500 mx-auto flex items-center justify-center text-xl">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-hydrangea-500">Recipe Submitted!</h3>
+                <p class="text-xs text-earth-500 leading-relaxed" id="savedRecipeText"></p>
+            </div>
         </section>
 
         <!-- 4. VIDEO MESSAGE BOOTH SECTION -->
@@ -856,11 +864,7 @@
         }
 
         // Google Apps Script Web App URL for Google Sheets & Drive Integration
-        // To connect Google Sheets & Drive:
-        // 1. Create a Google Sheet with tabs: "RSVP", "Recipes", and "Videos".
-        // 2. Attach a Google Apps Script to the Sheet handling doPost(e) for each form type.
-        // 3. Paste your deployed Web App URL below:
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec'; // Replace with your deployed Web App URL
 
         function handleRSVPSubmit(e) {
             e.preventDefault();
@@ -872,24 +876,118 @@
             const detailsText = document.getElementById('savedDetailsText');
 
             const payload = {
-                formType: 'rsvp',
+                action: 'rsvp',
                 name: name,
                 email: email,
                 attendance: attendance
             };
 
-            if (GOOGLE_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec') {
-                fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                }).catch(err => console.error(err));
-            }
+            // Using fetch with no-cors or standard POST if deployed as web app with JSON response
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.error(err));
 
             if (form && confirmBox) {
                 form.classList.add('hidden');
                 confirmBox.classList.remove('hidden');
                 if (detailsText && name) {
-                    detailsText.textContent = `Thank you, ${name}! Your RSVP confirmation (${attendance}) has been recorded.`;
+                    detailsText.textContent = `Thank you, ${name}! Your RSVP confirmation (${attendance}) has been submitted.`;
+                }
+            }
+        }
+
+        function handleRecipeSubmit(e) {
+            e.preventDefault();
+            const form = document.getElementById('recipeForm');
+            const confirmBox = document.getElementById('recipeConfirmation');
+            const title = document.getElementById('recipeTitle')?.value;
+            const contributor = document.getElementById('recipeContributor')?.value;
+            const instructions = document.getElementById('recipeInstructions')?.value;
+            const savedRecipeText = document.getElementById('savedRecipeText');
+
+            const payload = {
+                action: 'recipe',
+                title: title,
+                contributor: contributor,
+                instructions: instructions
+            };
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.error(err));
+
+            if (form && confirmBox) {
+                form.classList.add('hidden');
+                confirmBox.classList.remove('hidden');
+                if (savedRecipeText && contributor && title) {
+                    savedRecipeText.textContent = `Thank you, ${contributor}! Your recipe "${title}" has been successfully added to our wedding kitchen collection.`;
+                }
+            }
+        }
+
+        function handleVideoUpload(e) {
+            e.preventDefault();
+            const form = document.getElementById('videoUploadForm');
+            const confirmBox = document.getElementById('videoConfirmation');
+            const submitBtn = document.getElementById('videoSubmitBtn');
+            const name = document.getElementById('videoSenderName')?.value;
+            const note = document.getElementById('videoNote')?.value;
+            const fileInput = document.getElementById('videoFile');
+            const detailsText = document.getElementById('videoSavedDetails');
+
+            if (!fileInput.files || !fileInput.files[0]) return;
+            const file = fileInput.files[0];
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Uploading to Google Drive...';
+            }
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                const base64Data = reader.result.split(',')[1];
+                const payload = {
+                    action: 'video',
+                    filename: file.name,
+                    mimeType: file.type,
+                    data: base64Data,
+                    senderName: name,
+                    note: note
+                };
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    finalizeVideoSuccess(name);
+                })
+                .catch(err => {
+                    console.error(err);
+                    finalizeVideoSuccess(name);
+                });
+            };
+        }
+
+        function finalizeVideoSuccess(name) {
+            const form = document.getElementById('videoUploadForm');
+            const confirmBox = document.getElementById('videoConfirmation');
+            const detailsText = document.getElementById('videoSavedDetails');
+
+            if (form && confirmBox) {
+                form.classList.add('hidden');
+                confirmBox.classList.remove('hidden');
+                if (detailsText && name) {
+                    detailsText.textContent = `Thank you, ${name}! Your video greeting has been successfully uploaded.`;
                 }
             }
         }
@@ -901,20 +999,20 @@
             const instructions = document.getElementById('recipeInstructions')?.value;
 
             const payload = {
-                formType: 'recipe',
+                action: 'recipe',
                 title: title,
                 contributor: contributor,
                 instructions: instructions
             };
 
-            if (GOOGLE_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec') {
-                fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                }).catch(err => console.error(err));
-            }
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.error(err));
 
-            alert(`Thank you, ${contributor}! Your recipe "${title}" has been submitted and saved.`);
+            alert(`Thank you, ${contributor}! Your recipe "${title}" has been submitted and saved to your Google Sheet.`);
             document.getElementById('recipeForm')?.reset();
         }
 
@@ -941,6 +1039,7 @@
             reader.onload = function () {
                 const base64Data = reader.result.split(',')[1];
                 const payload = {
+                    action: 'video',
                     filename: file.name,
                     mimeType: file.type,
                     data: base64Data,
@@ -948,26 +1047,19 @@
                     note: note
                 };
 
-                // If GOOGLE_SCRIPT_URL is configured, send to Google Drive
-                if (GOOGLE_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec') {
-                    fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        finalizeVideoSuccess(name);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        finalizeVideoSuccess(name); // Fallback confirmation
-                    });
-                } else {
-                    // Simulated success if script URL not yet set up
-                    setTimeout(() => {
-                        finalizeVideoSuccess(name);
-                    }, 1200);
-                }
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    finalizeVideoSuccess(name);
+                })
+                .catch(err => {
+                    console.error(err);
+                    finalizeVideoSuccess(name);
+                });
             };
         }
 
@@ -980,31 +1072,9 @@
                 form.classList.add('hidden');
                 confirmBox.classList.remove('hidden');
                 if (detailsText && name) {
-                    detailsText.textContent = `Thank you, ${name}! Your video greeting has been successfully uploaded and saved to your Google Drive folder.`;
+                    detailsText.textContent = `Thank you, ${name}! Your video greeting has been successfully uploaded and saved into your Google Drive folder.`;
                 }
             }
-        }
-
-        function handleRSVPSubmit(e) {
-            e.preventDefault();
-            const form = document.getElementById('rsvpForm');
-            const confirmBox = document.getElementById('rsvpConfirmation');
-            const name = document.getElementById('guestName')?.value;
-            const detailsText = document.getElementById('savedDetailsText');
-
-            if (form && confirmBox) {
-                form.classList.add('hidden');
-                confirmBox.classList.remove('hidden');
-                if (detailsText && name) {
-                    detailsText.textContent = `Thank you, ${name}! Your RSVP confirmation has been received.`;
-                }
-            }
-        }
-
-        function handleRecipeSubmit(e) {
-            e.preventDefault();
-            alert('Thank you! Your family recipe has been submitted.');
-            document.getElementById('recipeForm')?.reset();
         }
 
         let audioInteracted = false;
