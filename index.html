@@ -80,7 +80,8 @@
             inset: 0;
             z-index: 60;
             display: flex;
-            background: #12100E;
+            background: transparent;
+            pointer-events: none;
             overflow: hidden;
             transition: opacity 1.2s ease 1.5s;
         }
@@ -90,6 +91,7 @@
             height: 100%;
             background: #1A293B;
             position: relative;
+            pointer-events: auto;
             transition: transform 5s cubic-bezier(0.25, 1, 0.5, 1);
             border: 2px solid #C5A059;
             display: flex;
@@ -116,7 +118,7 @@
             transform: rotateY(110deg);
         }
 
-        /* Intro Video Container Overlay */
+        /* Intro Video Container Overlay (Behind the doors so it shows through the opening gap) */
         #introVideoOverlay {
             position: fixed;
             inset: 0;
@@ -279,7 +281,7 @@
 
     <!-- INTRO VIDEO OVERLAY (Plays once when opening) -->
     <div id="introVideoOverlay" class="hidden">
-        <video id="introVideo" class="w-full max-w-[450px] h-full object-cover" playsinline onended="finishIntroVideo()">
+        <video id="introVideo" class="w-full max-w-[450px] h-full object-cover" playsinline preload="auto" onended="finishIntroVideo()">
             <source src="https://erbjoi.github.io/JessaandChristopherWeddingInvite/front%20page%20video.mp4" type="video/mp4">
         </video>
         <button onclick="skipIntroVideo()" class="absolute bottom-10 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white font-cinzel text-xs tracking-wider border border-white/40">
@@ -440,7 +442,7 @@
                     <p class="text-[11px] text-earth-700 leading-tight">Purok Kumaliskis, Barangay Kumaliskis<br>Don Salvador Benedicto (DSB), Negros Occidental</p>
                     <div class="flex justify-center gap-2 pt-1">
                         <span class="px-2.5 py-0.5 bg-earth-100 rounded-full border border-earth-300 text-[9px] font-cinzel font-semibold text-earth-900">
-                            <i class="far fa-clock mr-1"></i> 4:00 PM Reception
+                            <i class="far fa-clock mr-1"></i> 4:00 PM Cocktail
                         </span>
                         <span class="px-2.5 py-0.5 bg-earth-100 rounded-full border border-earth-300 text-[9px] font-cinzel font-semibold text-earth-900">
                             <i class="far fa-clock mr-1"></i> 6:00 PM Dinner
@@ -688,15 +690,25 @@
     <script>
         function startOpeningSequence() {
             const doors = document.getElementById('doorOverlay');
+            const videoOverlay = document.getElementById('introVideoOverlay');
+            const video = document.getElementById('introVideo');
+
             if (doors) {
                 doors.classList.add('doors-open');
-                // Trigger video play immediately as doors swing open
-                setTimeout(() => {
-                    playIntroVideo();
-                }, 200);
+                
+                // Show video overlay immediately and begin playback right as doors start swinging open
+                if (videoOverlay && video) {
+                    videoOverlay.classList.remove('hidden');
+                    video.currentTime = 0;
+                    video.load();
+                    video.play().catch(() => {
+                        finishIntroVideo();
+                    });
+                }
+
                 setTimeout(() => {
                     doors.style.display = 'none';
-                }, 4800);
+                }, 5000);
             }
         }
 
