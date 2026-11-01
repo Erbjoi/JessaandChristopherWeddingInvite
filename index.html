@@ -589,6 +589,11 @@
                 </div>
 
                 <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Recipe Link (Optional)</label>
+                    <input type="url" id="recipeLink" placeholder="https://example.com/recipe" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
+                </div>
+
+                <div>
                     <label class="block text-xs font-cinzel text-earth-500 mb-1">Ingredients & Instructions *</label>
                     <textarea id="recipeInstructions" rows="3" required placeholder="Steps and ingredients..." class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400"></textarea>
                 </div>
@@ -905,6 +910,7 @@
             const confirmBox = document.getElementById('recipeConfirmation');
             const title = document.getElementById('recipeTitle')?.value;
             const contributor = document.getElementById('recipeContributor')?.value;
+            const recipeLink = document.getElementById('recipeLink')?.value;
             const instructions = document.getElementById('recipeInstructions')?.value;
             const savedRecipeText = document.getElementById('savedRecipeText');
 
@@ -912,6 +918,7 @@
                 action: 'recipe',
                 title: title,
                 contributor: contributor,
+                recipeLink: recipeLink,
                 instructions: instructions
             };
 
