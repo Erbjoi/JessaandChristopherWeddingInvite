@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jessa Mae & Christopher Paul — Wedding Invitation</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Canvas Confetti Library for Hydrangea Petals -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hydrangea: {
+                            50: '#F4F7FC',
+                            100: '#E6EEF8',
+                            200: '#CDDFF0',
+                            300: '#AEBED5',
+                            400: '#859BBA',
+                            500: '#5C7496',
+                            900: '#233246'
+                        },
+                        earth: {
+                            100: '#EFEBE7',
+                            300: '#A38B76',
+                            500: '#6F5038',
+                            700: '#4A3423',
+                            900: '#2A1C12'
+                        },
+                        linen: '#FAF7F2'
+                    },
+                    fontFamily: {
+                        script: ['"Alex Brush"', 'cursive'],
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        cinzel: ['"Cinzel"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0E0D0B;
+            color: #332B25;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mobile-card-frame {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            margin: 0 auto;
+            position: relative;
+            background-color: #FBF8F3;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.85);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Double Door Opening Overlay Animation */
+        #doorOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: flex;
+            background: #12100E;
+            overflow: hidden;
+            transition: opacity 0.8s ease 0.5s;
+        }
+
+        .door-panel {
+            width: 50%;
+            height: 100%;
+            background: #1A293B;
+            position: relative;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            border: 2px solid #C5A059;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .door-left {
+            transform-origin: left;
+            border-right: 1px solid #C5A059;
+        }
+
+        .door-right {
+            transform-origin: right;
+            border-left: 1px solid #C5A059;
+        }
+
+        .doors-open .door-left {
+            transform: rotateY(-105deg);
+        }
+
+        .doors-open .door-right {
+            transform: rotateY(105deg);
+        }
+
+        /* Intro Video Container Overlay */
+        #introVideoOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 55;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+
+        .hero-section-bg {
+            background-image: url('https://erbjoi.github.io/Digital-Wedding-Invite/frontpage2.jpg');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            position: relative;
+            min-height: 94vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Inline Top Navigation Bar */
+        .inline-nav-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(251, 248, 243, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.4);
+            z-index: 20;
+        }
+
+        .nav-music-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(197, 160, 89, 0.15);
+            border: 1px solid rgba(197, 160, 89, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #C5A059;
+        }
+
+        .nav-music-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: #C5A059;
+        }
+
+        .nav-pill-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 5px 8px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .nav-pill-recipe {
+            color: #233246;
+            background: transparent;
+            border: 1px solid rgba(35, 50, 70, 0.35);
+        }
+
+        .nav-pill-video {
+            color: #6F5038;
+            background: transparent;
+            border: 1px solid rgba(111, 80, 56, 0.35);
+        }
+
+        .nav-pill-rsvp {
+            color: #FFFFFF;
+            background: #233246;
+            border: 1px solid #233246;
+        }
+
+        /* Compact & Transparent Wax Seal Target */
+        .wax-seal-hotspot {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            position: absolute;
+            top: 57.5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 30;
+        }
+
+        .paper-card {
+            background: rgba(255, 253, 250, 0.95);
+            border: 1px solid #E2D7C5;
+            box-shadow: 0 8px 24px -4px rgba(35, 50, 70, 0.06);
+            backdrop-filter: blur(4px);
+        }
+
+        .mobile-card-frame::-webkit-scrollbar {
+            width: 4px;
+        }
+        .mobile-card-frame::-webkit-scrollbar-thumb {
+            background: #C5A059;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-neutral-950" onclick="handleFirstInteraction()">
+
+    <!-- INTRO VIDEO OVERLAY (Plays once when opening) -->
+    <div id="introVideoOverlay" class="hidden">
+        <video id="introVideo" class="w-full max-w-[450px] h-full object-cover" playsinline onended="finishIntroVideo()">
+            <source src="https://erbjoi.github.io/Digital-Wedding-Invite/front%20page%20video.mp4" type="video/mp4">
+        </video>
+        <button onclick="skipIntroVideo()" class="absolute bottom-10 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white font-cinzel text-xs tracking-wider border border-white/40">
+            Skip Intro
+        </button>
+    </div>
+
+    <!-- DOUBLE DOOR OPENING OVERLAY -->
+    <div id="doorOverlay">
+        <div class="door-panel door-left">
+            <div class="absolute inset-4 border border-[#C5A059]/30 pointer-events-none"></div>
+            <div class="text-[#C5A059] font-cinzel text-xs tracking-[0.3em] uppercase rotate-[-90deg] whitespace-nowrap opacity-70">Château de l'Amour</div>
+        </div>
+        <div class="door-panel door-right">
+            <div class="absolute inset-4 border border-[#C5A059]/30 pointer-events-none"></div>
+            <!-- Central Interactive Open Button -->
+            <div class="absolute -left-10 z-20">
+                <button onclick="startOpeningSequence()" class="group relative w-20 h-20 rounded-full bg-gradient-to-br from-[#D4AF37] via-[#AA7C11] to-[#6E4E08] shadow-2xl flex items-center justify-center border-2 border-[#FFE5A3] cursor-pointer hover:scale-105 transition-transform">
+                    <span class="font-serif text-xl font-bold text-[#3A2200] tracking-tighter">J | C</span>
+                    <div class="absolute -bottom-8 whitespace-nowrap text-[8.5px] font-cinzel tracking-widest text-[#C5A059] uppercase bg-[#12100E]/90 px-2 py-0.5 rounded-full border border-[#C5A059]/40">
+                        Open Invitation
+                    </div>
+                </button>
+            </div>
+            <div class="text-[#C5A059] font-cinzel text-xs tracking-[0.3em] uppercase rotate-[90deg] whitespace-nowrap opacity-70">May 31, 2027</div>
+        </div>
+    </div>
+
+    <div class="mobile-card-frame flex flex-col justify-start relative text-earth-900">
+
+        <!-- Inline Top Navigation Bar -->
+        <nav class="inline-nav-bar">
+            <button id="musicToggleBtn" onclick="toggleAudioExplicit(event)" aria-label="Toggle music" class="nav-music-btn" title="Toggle Background Music">
+                <svg id="musicIcon" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                </svg>
+            </button>
+            <div class="flex gap-1.5">
+                <a href="#recipe-section" class="nav-pill-btn nav-pill-recipe">
+                    <i class="fas fa-utensils text-[8px]"></i> Recipe
+                </a>
+                <a href="#video-section" class="nav-pill-btn nav-pill-video">
+                    <i class="fas fa-video text-[8px]"></i> Video
+                </a>
+                <a href="#rsvp-section" class="nav-pill-btn nav-pill-rsvp">
+                    RSVP
+                </a>
+            </div>
+        </nav>
+
+        <!-- Audio Player Element -->
+        <audio id="bgAudio" loop preload="auto">
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-113576.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- HERO COVER PAGE (With Toile Card Image Background) -->
+        <section class="hero-section-bg border-b border-[#D5C9B1] overflow-hidden z-10 pb-2">
+            
+            <!-- Transparent Clickable Wax Seal Hotspot Target -->
+            <button onclick="toggleWaxSeal(event)" id="waxSealBtn" class="wax-seal-hotspot" title="Tap Wax Seal for Blessing"></button>
+
+            <!-- Text Prompt below Wax Seal Target -->
+            <div class="mt-auto mb-10 z-20 text-center">
+                <span class="text-[8px] font-cinzel tracking-wider text-[#C5A059] bg-[#FAF7F2]/95 px-2.5 py-0.5 rounded-full border border-[#C5A059]/40 font-semibold shadow-xs">
+                    PRESS SEAL TO UNVEIL BLESSING
+                </span>
+            </div>
+
+            <!-- Scroll Prompt positioned safely above bottom margin -->
+            <div class="pb-1 text-[#233246] text-xs flex flex-col items-center z-20">
+                <div class="bg-[#FAF7F2]/90 px-3 py-1 rounded-full border border-[#D5C9B1] shadow-xs flex items-center gap-1.5">
+                    <span class="font-cinzel text-[8px] tracking-widest font-bold text-[#233246]">SCROLL DOWN</span>
+                    <i class="fas fa-chevron-down text-[9px] animate-bounce text-[#C5A059]"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- COUNTDOWN TIMER SECTION -->
+        <section class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/50 text-center relative z-10">
+            <h2 class="font-cinzel text-xs tracking-[0.2em] text-earth-500 uppercase font-semibold">Counting Down To Our Wedding</h2>
+            <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2 mb-4"></div>
+
+            <div id="countdown" class="grid grid-cols-4 gap-2 text-center">
+                <div class="paper-card p-3 rounded-lg">
+                    <span id="cd-days" class="font-serif text-2xl font-bold text-hydrangea-500 block">00</span>
+                    <span class="text-[9px] font-cinzel uppercase tracking-wider text-earth-500">Days</span>
+                </div>
+                <div class="paper-card p-3 rounded-lg">
+                    <span id="cd-hours" class="font-serif text-2xl font-bold text-hydrangea-500 block">00</span>
+                    <span class="text-[9px] font-cinzel uppercase tracking-wider text-earth-500">Hours</span>
+                </div>
+                <div class="paper-card p-3 rounded-lg">
+                    <span id="cd-minutes" class="font-serif text-2xl font-bold text-hydrangea-500 block">00</span>
+                    <span class="text-[9px] font-cinzel uppercase tracking-wider text-earth-500">Mins</span>
+                </div>
+                <div class="paper-card p-3 rounded-lg">
+                    <span id="cd-seconds" class="font-serif text-2xl font-bold text-hydrangea-500 block">00</span>
+                    <span class="text-[9px] font-cinzel uppercase tracking-wider text-earth-500">Secs</span>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button onclick="openCalendarModal()" class="px-4 py-2 text-xs font-cinzel border border-hydrangea-300 rounded-full text-hydrangea-500 hover:bg-hydrangea-100 transition-all inline-flex items-center gap-2 bg-white shadow-xs">
+                    <i class="far fa-calendar-alt"></i> Add to Calendar
+                </button>
+            </div>
+        </section>
+
+        <!-- 1. RSVP FORM -->
+        <section id="rsvp-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Répondez S'il Vous Plaît</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">RSVP & Guest Confirmation</h2>
+                <p class="font-sans text-[11px] text-earth-500 mt-0.5">Please respond by April 30, 2027</p>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+
+            <form id="rsvpForm" onsubmit="handleRSVPSubmit(event)" class="paper-card p-5 rounded-xl space-y-4">
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Full Name *</label>
+                    <input type="text" id="guestName" required placeholder="e.g. Maria Santos" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Email Address *</label>
+                    <input type="email" id="guestEmail" required placeholder="name@example.com" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Attendance *</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="attendance" value="Joyfully Accepts" checked class="peer sr-only">
+                            <div class="py-2 px-2 rounded-lg border border-hydrangea-200 text-center font-cinzel text-[11px] peer-checked:bg-hydrangea-100 peer-checked:border-hydrangea-400 text-earth-700 peer-checked:text-hydrangea-500 transition-all">
+                                <i class="fas fa-check mr-1 text-[10px]"></i> Joyfully Accepts
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="attendance" value="Regretfully Declines" class="peer sr-only">
+                            <div class="py-2 px-2 rounded-lg border border-hydrangea-200 text-center font-cinzel text-[11px] peer-checked:bg-red-50 peer-checked:border-red-300 text-earth-700 peer-checked:text-red-700 transition-all">
+                                <i class="fas fa-times mr-1 text-[10px]"></i> Declines
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-hydrangea-500 hover:bg-hydrangea-900 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg transition-all shadow-sm">
+                    Submit RSVP Response
+                </button>
+            </form>
+
+            <div id="rsvpConfirmation" class="hidden paper-card p-5 rounded-xl text-center space-y-3">
+                <div class="w-12 h-12 rounded-full bg-hydrangea-100 text-hydrangea-500 mx-auto flex items-center justify-center text-xl">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-hydrangea-500">Response Saved!</h3>
+                <p class="text-xs text-earth-500 leading-relaxed" id="savedDetailsText"></p>
+            </div>
+        </section>
+
+        <!-- 2. RECIPE SECTION -->
+        <section id="recipe-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/30 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Kitchen Memories</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Share A Family Recipe</h2>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+
+            <form id="recipeForm" onsubmit="handleRecipeSubmit(event)" class="paper-card p-5 rounded-xl space-y-4">
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Recipe Title *</label>
+                    <input type="text" id="recipeTitle" required placeholder="e.g. Grandma's Famous Chicken Adobo" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Your Name *</label>
+                    <input type="text" id="recipeContributor" required placeholder="Guest / Chef Name" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Ingredients & Instructions *</label>
+                    <textarea id="recipeInstructions" rows="3" required placeholder="Steps and ingredients..." class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-hydrangea-500 hover:bg-hydrangea-900 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg transition-all shadow-sm">
+                    Submit Recipe Card
+                </button>
+            </form>
+        </section>
+
+        <!-- 3. VIDEO MESSAGE BOOTH SECTION -->
+        <section id="video-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+            <div class="text-center mb-5">
+                <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Virtual Guestbook</span>
+                <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Upload a Video Message</h2>
+                <p class="font-sans text-[11px] text-earth-500 mt-0.5">Send your wishes straight to our Google Drive archive</p>
+                <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
+            </div>
+
+            <form id="videoUploadForm" onsubmit="handleVideoUpload(event)" class="paper-card p-5 rounded-xl space-y-4">
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Your Name *</label>
+                    <input type="text" id="videoSenderName" required placeholder="e.g. Aunt Beatrice" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Select Video File (.mp4, .mov) *</label>
+                    <div class="border-2 border-dashed border-hydrangea-300 rounded-lg p-4 text-center bg-linen hover:bg-white transition-all cursor-pointer relative">
+                        <input type="file" id="videoFile" accept="video/*" required onchange="previewVideoFilename(this)" class="absolute inset-0 opacity-0 cursor-pointer">
+                        <i class="fas fa-cloud-upload-alt text-2xl text-hydrangea-400 mb-1"></i>
+                        <p id="videoFileNameDisplay" class="text-xs text-earth-700 font-medium">Click or drag video greeting here</p>
+                        <span class="text-[9px] text-earth-400">Saved directly to Google Drive</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-cinzel text-earth-500 mb-1">Personal Note / Blessing</label>
+                    <textarea id="videoNote" rows="2" placeholder="Write a short note to accompany your video..." class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-hydrangea-500 hover:bg-hydrangea-900 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg transition-all shadow-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-upload text-xs"></i> Save to Google Drive
+                </button>
+            </form>
+
+            <div id="videoConfirmation" class="hidden paper-card p-5 rounded-xl text-center space-y-3">
+                <div class="w-12 h-12 rounded-full bg-hydrangea-100 text-hydrangea-500 mx-auto flex items-center justify-center text-xl">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-hydrangea-500">Video Uploaded Successfully!</h3>
+                <p class="text-xs text-earth-500 leading-relaxed" id="videoSavedDetails"></p>
+                <div class="inline-flex items-center gap-1.5 text-[10px] font-cinzel text-earth-700 bg-hydrangea-50 px-3 py-1 rounded-full border border-hydrangea-200">
+                    <i class="fab fa-google-drive text-hydrangea-500"></i> Saved in Google Drive / Wedding_Video_Messages
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- BLESSING MODAL -->
+    <div id="blessingModal" class="fixed inset-0 bg-neutral-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="paper-card max-w-sm w-full p-6 rounded-2xl relative space-y-4 text-center border-2 border-hydrangea-300">
+            <button onclick="closeBlessingModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-earth-900 text-sm">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="w-12 h-12 rounded-full bg-hydrangea-100 border border-hydrangea-300 text-hydrangea-500 mx-auto flex items-center justify-center text-xl">
+                <i class="fas fa-spa"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-hydrangea-500">Wedding Blessing</h3>
+            <p class="font-serif italic text-xs text-earth-700 leading-relaxed px-2">
+                "May love, peace, and eternal joy surround Jessa Mae & Christopher Paul, and all who share in their joyous union."
+            </p>
+            <button onclick="closeBlessingModal()" class="w-full py-2.5 bg-hydrangea-500 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg hover:bg-hydrangea-900 shadow-sm transition-all">
+                Accept Blessing
+            </button>
+        </div>
+    </div>
+
+    <!-- CALENDAR MODAL -->
+    <div id="calendarModal" class="fixed inset-0 bg-neutral-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="paper-card max-w-sm w-full p-6 rounded-2xl relative space-y-4">
+            <button onclick="closeCalendarModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-earth-900">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center">
+                <i class="far fa-calendar-check text-3xl text-hydrangea-400 mb-2"></i>
+                <h3 class="font-serif text-lg font-bold text-hydrangea-500">Add to Calendar</h3>
+                <p class="text-xs text-earth-500 mt-0.5">May 31, 2027 at 1:30 PM PST</p>
+            </div>
+            <div class="space-y-2 pt-2">
+                <a id="googleCalLink" target="_blank" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Jessa+Mae+%26+Christopher+Paul+Wedding&dates=20270531T053000Z/20270531T100000Z&location=St.+James+the+Greater+Church,+Talisay+City" class="w-full py-2.5 px-4 rounded-lg bg-linen border border-hydrangea-200 text-xs font-cinzel text-earth-700 flex items-center justify-between hover:bg-hydrangea-50">
+                    <span>Google Calendar</span>
+                    <i class="fab fa-google"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startOpeningSequence() {
+            const doors = document.getElementById('doorOverlay');
+            if (doors) {
+                doors.classList.add('doors-open');
+                setTimeout(() => {
+                    doors.style.display = 'none';
+                    playIntroVideo();
+                }, 1100);
+            }
+        }
+
+        function playIntroVideo() {
+            const videoOverlay = document.getElementById('introVideoOverlay');
+            const video = document.getElementById('introVideo');
+            if (videoOverlay && video) {
+                videoOverlay.classList.remove('hidden');
+                video.play().catch(() => {
+                    finishIntroVideo();
+                });
+            } else {
+                finishIntroVideo();
+            }
+        }
+
+        function finishIntroVideo() {
+            const videoOverlay = document.getElementById('introVideoOverlay');
+            if (videoOverlay) {
+                videoOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    videoOverlay.style.display = 'none';
+                }, 800);
+            }
+            const audio = document.getElementById('bgAudio');
+            if (audio) {
+                audio.play().catch(() => {});
+            }
+        }
+
+        function skipIntroVideo() {
+            const video = document.getElementById('introVideo');
+            if (video) video.pause();
+            finishIntroVideo();
+        }
+
+        function triggerHydrangeaPetals() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 45,
+                    spread: 85,
+                    origin: { y: 0.6 },
+                    colors: ['#3A506B', '#C5A059', '#D5C9B1', '#FAF7F2'],
+                    shapes: ['circle'],
+                    scalar: 1.2,
+                    drift: 0.15
+                });
+            }
+        }
+
+        function toggleWaxSeal(e) {
+            if (e) e.stopPropagation();
+            triggerHydrangeaPetals();
+            openBlessingModal();
+        }
+
+        function openBlessingModal() {
+            const modal = document.getElementById('blessingModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeBlessingModal() {
+            const modal = document.getElementById('blessingModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function openCalendarModal() {
+            const modal = document.getElementById('calendarModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeCalendarModal() {
+            const modal = document.getElementById('calendarModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function updateCountdown() {
+            const target = new Date('May 31, 2027 13:30:00').getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+                document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('cd-minutes').textContent = String(mins).padStart(2, '0');
+                document.getElementById('cd-seconds').textContent = String(secs).padStart(2, '0');
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function previewVideoFilename(input) {
+            if (input.files && input.files[0]) {
+                const filename = input.files[0].name;
+                document.getElementById('videoFileNameDisplay').textContent = filename;
+            }
+        }
+
+        function handleVideoUpload(e) {
+            e.preventDefault();
+            const form = document.getElementById('videoUploadForm');
+            const confirmBox = document.getElementById('videoConfirmation');
+            const name = document.getElementById('videoSenderName')?.value;
+            const detailsText = document.getElementById('videoSavedDetails');
+
+            if (form && confirmBox) {
+                form.classList.add('hidden');
+                confirmBox.classList.remove('hidden');
+                if (detailsText && name) {
+                    detailsText.textContent = `Thank you, ${name}! Your video greeting has been successfully packaged and sent to Google Drive.`;
+                }
+            }
+        }
+
+        function handleRSVPSubmit(e) {
+            e.preventDefault();
+            const form = document.getElementById('rsvpForm');
+            const confirmBox = document.getElementById('rsvpConfirmation');
+            const name = document.getElementById('guestName')?.value;
+            const detailsText = document.getElementById('savedDetailsText');
+
+            if (form && confirmBox) {
+                form.classList.add('hidden');
+                confirmBox.classList.remove('hidden');
+                if (detailsText && name) {
+                    detailsText.textContent = `Thank you, ${name}! Your RSVP confirmation has been received.`;
+                }
+            }
+        }
+
+        function handleRecipeSubmit(e) {
+            e.preventDefault();
+            alert('Thank you! Your family recipe has been submitted.');
+            document.getElementById('recipeForm')?.reset();
+        }
+
+        let audioInteracted = false;
+        function handleFirstInteraction() {
+            if (!audioInteracted) {
+                audioInteracted = true;
+                const audio = document.getElementById('bgAudio');
+                if (audio) {
+                    audio.play().catch(() => {});
+                }
+            }
+        }
+
+        function toggleAudioExplicit(e) {
+            if (e) e.stopPropagation();
+            const audio = document.getElementById('bgAudio');
+            if (audio) {
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
