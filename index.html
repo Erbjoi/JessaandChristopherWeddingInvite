@@ -620,7 +620,7 @@
                     <textarea id="recipeInstructions" rows="3" required placeholder="Steps and ingredients..." class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400"></textarea>
                 </div>
 
-                <button type="submit" class="w-full py-3 bg-hydrangea-500 hover:bg-hydrangea-900 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg transition-all shadow-sm">
+                <button type="submit" id="recipeSubmitBtn" class="w-full py-3 bg-hydrangea-500 hover:bg-hydrangea-900 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg transition-all shadow-sm">
                     Submit Recipe Card
                 </button>
             </form>
@@ -670,6 +670,8 @@
                     <i class="fas fa-upload text-xs"></i> Save to Google Drive
                 </button>
             </form>
+
+            <p id="videoSubmissionError" class="hidden mt-3 text-xs text-red-700" role="alert"></p>
 
             <div id="videoConfirmation" class="hidden paper-card p-5 rounded-xl text-center space-y-3">
                 <div class="w-12 h-12 rounded-full bg-hydrangea-100 text-hydrangea-500 mx-auto flex items-center justify-center text-xl">
@@ -895,6 +897,15 @@
         // Google Apps Script Web App URL for Google Sheets & Drive Integration
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8T6SK15Fi04I1F7KjCtyj3V3-m2AYgBjVa-WOrPCWkLHgHkreFCuxUYRFWub07bkH/exec'; // Replace with your deployed Web App URL
 
+        function setSubmissionButtonState(button, isSubmitting, idleHtml, progressText) {
+            if (!button) return;
+            button.disabled = isSubmitting;
+            button.setAttribute('aria-busy', String(isSubmitting));
+            button.innerHTML = isSubmitting
+                ? `<i class="fas fa-spinner fa-spin mr-1" aria-hidden="true"></i> ${progressText}`
+                : idleHtml;
+        }
+
         function handleRSVPSubmit(e) {
             e.preventDefault();
             const form = document.getElementById('rsvpForm');
@@ -938,6 +949,8 @@
             const form = document.getElementById('recipeForm');
             const confirmBox = document.getElementById('recipeConfirmation');
             const errorMessage = document.getElementById('recipeSubmissionError');
+            const submitBtn = document.getElementById('recipeSubmitBtn');
+            const idleButtonHtml = 'Submit Recipe Card';
             const title = document.getElementById('recipeTitle')?.value;
             const contributor = document.getElementById('recipeContributor')?.value;
             const recipeLink = document.getElementById('recipeLink')?.value;
@@ -956,6 +969,8 @@
                 errorMessage.classList.add('hidden');
                 errorMessage.textContent = '';
             }
+            if (submitBtn?.disabled) return;
+            setSubmissionButtonState(submitBtn, true, idleButtonHtml, 'Submitting recipe...');
 
             try {
                 await fetch(GOOGLE_SCRIPT_URL, {
@@ -974,6 +989,7 @@
                 }
             } catch (error) {
                 console.error('Recipe submission failed:', error);
+                setSubmissionButtonState(submitBtn, false, idleButtonHtml, '');
                 if (errorMessage) {
                     errorMessage.textContent = 'We could not submit your recipe. Please check your connection and try again.';
                     errorMessage.classList.remove('hidden');
@@ -986,22 +1002,30 @@
             const form = document.getElementById('videoUploadForm');
             const confirmBox = document.getElementById('videoConfirmation');
             const submitBtn = document.getElementById('videoSubmitBtn');
+            const errorMessage = document.getElementById('videoSubmissionError');
+            const idleButtonHtml = '<i class="fas fa-upload text-xs" aria-hidden="true"></i> Save to Google Drive';
             const name = document.getElementById('videoSenderName')?.value;
             const note = document.getElementById('videoNote')?.value;
             const fileInput = document.getElementById('videoFile');
             const detailsText = document.getElementById('videoSavedDetails');
 
             if (!fileInput.files || !fileInput.files[0]) return;
+            if (submitBtn?.disabled) return;
             const file = fileInput.files[0];
 
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Uploading to Google Drive...';
+            if (errorMessage) {
+                errorMessage.classList.add('hidden');
+                errorMessage.textContent = '';
             }
+            setSubmissionButtonState(submitBtn, true, idleButtonHtml, 'Uploading to Google Drive...');
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function () {
+                if (typeof reader.result !== 'string') {
+                    showVideoUploadError();
+                    return;
+                }
                 const base64Data = reader.result.split(',')[1];
                 const payload = {
                     action: 'video',
@@ -1022,10 +1046,27 @@
                     finalizeVideoSuccess(name);
                 })
                 .catch(err => {
-                    console.error(err);
-                    finalizeVideoSuccess(name);
+                    showVideoUploadError(err);
                 });
             };
+            reader.onerror = function () {
+                showVideoUploadError(reader.error);
+            };
+        }
+
+        function showVideoUploadError(error) {
+            console.error('Video upload failed:', error);
+            setSubmissionButtonState(
+                document.getElementById('videoSubmitBtn'),
+                false,
+                '<i class="fas fa-upload text-xs" aria-hidden="true"></i> Save to Google Drive',
+                ''
+            );
+            const errorMessage = document.getElementById('videoSubmissionError');
+            if (errorMessage) {
+                errorMessage.textContent = 'We could not upload your video. Please check your connection and try again.';
+                errorMessage.classList.remove('hidden');
+            }
         }
 
         function finalizeVideoSuccess(name) {
