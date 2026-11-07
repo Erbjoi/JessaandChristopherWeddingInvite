@@ -131,7 +131,7 @@
         }
 
         .hero-section-bg {
-            background-image: url('https://erbjoi.github.io/JessaandChristopherWeddingInvite/frontpage2.jpg');
+            background-image: url('https://erbjoi.github.io/JessaandChristopherWeddingInvite/frontpageupdate.webp');
             background-size: cover;
             background-position: center top;
             background-repeat: no-repeat;
@@ -143,33 +143,33 @@
             align-items: center;
         }
 
-        /* Inline Top Navigation Bar & Collapsible Menu */
+        /* Floating Navigation & Collapsible Menu */
         .inline-nav-bar {
-            width: 100%;
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 40;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 16px;
-            background: rgba(251, 248, 243, 0.90);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.4);
-            z-index: 20;
-            position: relative;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
         }
 
         .nav-menu-drawer {
             position: absolute;
-            top: 100%;
-            left: 0;
+            top: calc(100% + 8px);
             right: 0;
+            width: min(220px, calc(100vw - 32px));
             background: rgba(251, 248, 243, 0.98);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.4);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            border-radius: 12px;
             backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             gap: 8px;
             padding: 12px 16px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
             transform: translateY(-10%);
             opacity: 0;
             pointer-events: none;
@@ -277,12 +277,12 @@
         }
     </style>
 </head>
-<body class="flex justify-center items-center min-h-screen bg-neutral-950" onclick="handleFirstInteraction()">
+<body class="flex justify-center items-center min-h-screen bg-neutral-950">
 
     <!-- INTRO VIDEO OVERLAY (Plays once when opening) -->
     <div id="introVideoOverlay" class="hidden">
         <video id="introVideo" class="w-full max-w-[450px] h-full object-cover" playsinline preload="auto" onended="finishIntroVideo()">
-            <source src="https://erbjoi.github.io/JessaandChristopherWeddingInvite/front%20page%20video.mp4" type="video/mp4">
+            <source src="https://erbjoi.github.io/JessaandChristopherWeddingInvite/frontpagevideoupdate.mp4" type="video/mp4">
         </video>
         <button onclick="skipIntroVideo()" class="absolute bottom-10 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white font-cinzel text-xs tracking-wider border border-white/40">
             Skip Intro
@@ -293,7 +293,6 @@
     <div id="doorOverlay">
         <div class="door-panel door-left">
             <div class="absolute inset-4 border border-[#C5A059]/30 pointer-events-none"></div>
-            <div class="text-[#C5A059] font-cinzel text-xs tracking-[0.3em] uppercase rotate-[-90deg] whitespace-nowrap opacity-70">St. James the Greater Church | Vista Villa DSB</div>
         </div>
         <div class="door-panel door-right">
             <div class="absolute inset-4 border border-[#C5A059]/30 pointer-events-none"></div>
@@ -306,23 +305,17 @@
                     </div>
                 </button>
             </div>
-            <div class="text-[#C5A059] font-cinzel text-xs tracking-[0.3em] uppercase rotate-[90deg] whitespace-nowrap opacity-70">May 31, 2027</div>
+            
         </div>
     </div>
 
-    <div class="mobile-card-frame flex flex-col justify-start relative text-earth-900">
-
-        <!-- Inline Top Navigation Bar with Collapsible Menu -->
-        <nav class="inline-nav-bar">
+    
+    <nav class="inline-nav-bar" aria-label="Wedding invitation navigation">
             <button id="musicToggleBtn" onclick="toggleAudioExplicit(event)" aria-label="Toggle music" class="nav-music-btn" title="Toggle Background Music">
                 <svg id="musicIcon" viewBox="0 0 24 24">
                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                 </svg>
             </button>
-
-            <div class="font-cinzel text-[10px] tracking-[0.2em] uppercase font-bold text-earth-700">
-                J & C Wedding
-            </div>
 
             <button onclick="toggleNavMenu(event)" aria-label="Toggle Navigation Menu" class="nav-music-btn" title="Menu">
                 <i class="fas fa-bars text-xs"></i>
@@ -330,6 +323,11 @@
 
             <!-- Collapsible Drawer -->
             <div id="navMenuDrawer" class="nav-menu-drawer">
+                <a href="#home-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-rsvp"><i class="fas fa-home"></i> Invitation Cover</a>
+                <a href="#countdown-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-recipe"><i class="fas fa-hourglass-half"></i> Wedding Countdown</a>
+                <a href="#verse-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-video"><i class="fas fa-book-open"></i> Bible Verse</a>
+                <a href="#event-details-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-gift"><i class="fas fa-church"></i> Ceremony & Reception</a>
+                <a href="#dress-code-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-recipe"><i class="fas fa-user-tie"></i> Dress Code & Colors</a>
                 <a href="#rsvp-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-rsvp"><i class="fas fa-envelope-open-text"></i> RSVP & Confirmation</a>
                 <a href="#recipe-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-recipe"><i class="fas fa-utensils"></i> Family Recipe</a>
                 <a href="#gifting-section" onclick="toggleNavMenu(event)" class="nav-pill-btn nav-pill-gift"><i class="fas fa-gift"></i> Gifting Registry</a>
@@ -337,13 +335,15 @@
             </div>
         </nav>
 
+    <div class="mobile-card-frame flex flex-col justify-start relative text-earth-900">
+
         <!-- Audio Player Element -->
         <audio id="bgAudio" loop preload="auto">
             <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-113576.mp3" type="audio/mpeg">
         </audio>
 
         <!-- HERO COVER PAGE (With Toile Card Image Background) -->
-        <section class="hero-section-bg border-b border-[#D5C9B1] overflow-hidden z-10 pb-2">
+        <section id="home-section" class="hero-section-bg border-b border-[#D5C9B1] overflow-hidden z-10 pb-2">
             
             <!-- Transparent Clickable Wax Seal Hotspot Target - Aligned to Gold Wax Seal -->
             <button onclick="toggleWaxSeal(event)" id="waxSealBtn" class="wax-seal-hotspot" title="Tap Wax Seal for Blessing" style="top: 73.5%;"></button>
@@ -365,7 +365,7 @@
         </section>
 
         <!-- COUNTDOWN TIMER SECTION -->
-        <section class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/50 text-center relative z-10">
+        <section id="countdown-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/50 text-center relative z-10">
             <h2 class="font-cinzel text-xs tracking-[0.2em] text-earth-500 uppercase font-semibold">Counting Down To Our Wedding</h2>
             <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2 mb-4"></div>
 
@@ -396,7 +396,7 @@
         </section>
 
         <!-- BIBLE VERSE SECTION -->
-        <section class="p-8 border-b border-hydrangea-200 text-center relative z-10 flex flex-col items-center justify-center min-h-[320px]" style="background-image: url('https://erbjoi.github.io/JessaandChristopherWeddingInvite/Border.jpg'); background-size: cover; background-position: center;">
+        <section id="verse-section" class="p-8 border-b border-hydrangea-200 text-center relative z-10 flex flex-col items-center justify-center min-h-[320px]" style="background-image: url('https://erbjoi.github.io/JessaandChristopherWeddingInvite/Border.jpg'); background-size: cover; background-position: center;">
             <div class="absolute inset-0 bg-[#FBF8F3]/85 backdrop-blur-xs"></div>
             <div class="relative z-10 max-w-xs space-y-3 p-4">
                 <i class="fas fa-quote-left text-[#C5A059] text-xl opacity-80"></i>
@@ -411,7 +411,7 @@
         </section>
 
         <!-- EVENT DETAILS & VENUE SECTION -->
-        <section class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
+        <section id="event-details-section" class="p-6 border-b border-hydrangea-200 bg-linen/90 relative z-10">
             <div class="text-center mb-5">
                 <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Order of Celebration</span>
                 <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Ceremony & Reception</h2>
@@ -428,7 +428,7 @@
                     <p class="font-serif text-base font-bold text-hydrangea-500">St. James the Greater</p>
                     <p class="text-[11px] text-earth-700 leading-tight">Hacienda Mana-ul, Brgy. Matab-ang<br>Talisay City, Negros Occidental</p>
                     <div class="inline-block px-3 py-1 bg-hydrangea-50 rounded-full border border-hydrangea-200 text-[10px] font-cinzel font-semibold text-hydrangea-900">
-                        <i class="far fa-clock mr-1"></i> 1:30 PM
+                        <i class="far fa-clock mr-1"></i> 1:00 PM
                     </div>
                 </div>
 
@@ -442,10 +442,10 @@
                     <p class="text-[11px] text-earth-700 leading-tight">Purok Kumaliskis, Barangay Kumaliskis<br>Don Salvador Benedicto (DSB), Negros Occidental</p>
                     <div class="flex justify-center gap-2 pt-1">
                         <span class="px-2.5 py-0.5 bg-earth-100 rounded-full border border-earth-300 text-[9px] font-cinzel font-semibold text-earth-900">
-                            <i class="far fa-clock mr-1"></i> 4:00 PM Cocktail
+                            <i class="far fa-clock mr-1"></i> 4:30 PM Cocktail
                         </span>
                         <span class="px-2.5 py-0.5 bg-earth-100 rounded-full border border-earth-300 text-[9px] font-cinzel font-semibold text-earth-900">
-                            <i class="far fa-clock mr-1"></i> 6:00 PM Dinner
+                            <i class="far fa-clock mr-1"></i> 6:30 PM Dinner
                         </span>
                     </div>
                 </div>
@@ -453,7 +453,7 @@
         </section>
 
         <!-- DRESS CODE & COLOR PALETTE SECTION -->
-        <section class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/40 relative z-10">
+        <section id="dress-code-section" class="p-6 border-b border-hydrangea-200 bg-hydrangea-50/40 relative z-10">
             <div class="text-center mb-5">
                 <span class="text-[10px] font-cinzel tracking-[0.2em] text-earth-500 uppercase">Attire & Aesthetics</span>
                 <h2 class="font-serif text-2xl text-hydrangea-500 italic mt-0.5">Dress Code & Color Palette</h2>
@@ -602,6 +602,8 @@
                     Submit Recipe Card
                 </button>
             </form>
+
+            <p id="recipeSubmissionError" class="hidden mt-3 text-xs text-red-700" role="alert"></p>
 
             <div id="recipeConfirmation" class="hidden paper-card p-5 rounded-xl text-center space-y-3">
                 <div class="w-12 h-12 rounded-full bg-hydrangea-100 text-hydrangea-500 mx-auto flex items-center justify-center text-xl">
@@ -904,10 +906,11 @@
             }
         }
 
-        function handleRecipeSubmit(e) {
+        async function handleRecipeSubmit(e) {
             e.preventDefault();
             const form = document.getElementById('recipeForm');
             const confirmBox = document.getElementById('recipeConfirmation');
+            const errorMessage = document.getElementById('recipeSubmissionError');
             const title = document.getElementById('recipeTitle')?.value;
             const contributor = document.getElementById('recipeContributor')?.value;
             const recipeLink = document.getElementById('recipeLink')?.value;
@@ -922,105 +925,33 @@
                 instructions: instructions
             };
 
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            }).catch(err => console.error(err));
-
-            if (form && confirmBox) {
-                form.classList.add('hidden');
-                confirmBox.classList.remove('hidden');
-                if (savedRecipeText && contributor && title) {
-                    savedRecipeText.textContent = `Thank you, ${contributor}! Your recipe "${title}" has been successfully added to our wedding kitchen collection.`;
-                }
-            }
-        }
-
-        function handleVideoUpload(e) {
-            e.preventDefault();
-            const form = document.getElementById('videoUploadForm');
-            const confirmBox = document.getElementById('videoConfirmation');
-            const submitBtn = document.getElementById('videoSubmitBtn');
-            const name = document.getElementById('videoSenderName')?.value;
-            const note = document.getElementById('videoNote')?.value;
-            const fileInput = document.getElementById('videoFile');
-            const detailsText = document.getElementById('videoSavedDetails');
-
-            if (!fileInput.files || !fileInput.files[0]) return;
-            const file = fileInput.files[0];
-
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Uploading to Google Drive...';
+            if (errorMessage) {
+                errorMessage.classList.add('hidden');
+                errorMessage.textContent = '';
             }
 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                const base64Data = reader.result.split(',')[1];
-                const payload = {
-                    action: 'video',
-                    filename: file.name,
-                    mimeType: file.type,
-                    data: base64Data,
-                    senderName: name,
-                    note: note
-                };
-
-                fetch(GOOGLE_SCRIPT_URL, {
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
-                })
-                .then(() => {
-                    finalizeVideoSuccess(name);
-                })
-                .catch(err => {
-                    console.error(err);
-                    finalizeVideoSuccess(name);
                 });
-            };
-        }
 
-        function finalizeVideoSuccess(name) {
-            const form = document.getElementById('videoUploadForm');
-            const confirmBox = document.getElementById('videoConfirmation');
-            const detailsText = document.getElementById('videoSavedDetails');
-
-            if (form && confirmBox) {
-                form.classList.add('hidden');
-                confirmBox.classList.remove('hidden');
-                if (detailsText && name) {
-                    detailsText.textContent = `Thank you, ${name}! Your video greeting has been successfully uploaded.`;
+                if (form && confirmBox) {
+                    form.classList.add('hidden');
+                    confirmBox.classList.remove('hidden');
+                    if (savedRecipeText && contributor && title) {
+                        savedRecipeText.textContent = `Thank you, ${contributor}! Your recipe "${title}" has been successfully added to our wedding kitchen collection.`;
+                    }
+                }
+            } catch (error) {
+                console.error('Recipe submission failed:', error);
+                if (errorMessage) {
+                    errorMessage.textContent = 'We could not submit your recipe. Please check your connection and try again.';
+                    errorMessage.classList.remove('hidden');
                 }
             }
-        }
-
-        function handleRecipeSubmit(e) {
-            e.preventDefault();
-            const title = document.getElementById('recipeTitle')?.value;
-            const contributor = document.getElementById('recipeContributor')?.value;
-            const instructions = document.getElementById('recipeInstructions')?.value;
-
-            const payload = {
-                action: 'recipe',
-                title: title,
-                contributor: contributor,
-                instructions: instructions
-            };
-
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(err => console.error(err));
-
-            alert(`Thank you, ${contributor}! Your recipe "${title}" has been submitted and saved to your Google Sheet.`);
-            document.getElementById('recipeForm')?.reset();
         }
 
         function handleVideoUpload(e) {
@@ -1080,17 +1011,6 @@
                 confirmBox.classList.remove('hidden');
                 if (detailsText && name) {
                     detailsText.textContent = `Thank you, ${name}! Your video greeting has been successfully uploaded and saved into your Google Drive folder.`;
-                }
-            }
-        }
-
-        let audioInteracted = false;
-        function handleFirstInteraction() {
-            if (!audioInteracted) {
-                audioInteracted = true;
-                const audio = document.getElementById('bgAudio');
-                if (audio) {
-                    audio.play().catch(() => {});
                 }
             }
         }
