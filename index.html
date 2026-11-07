@@ -997,17 +997,14 @@
             }
         }
 
-        function handleVideoUpload(e) {
+        async function handleVideoUpload(e) {
             e.preventDefault();
-            const form = document.getElementById('videoUploadForm');
-            const confirmBox = document.getElementById('videoConfirmation');
             const submitBtn = document.getElementById('videoSubmitBtn');
             const errorMessage = document.getElementById('videoSubmissionError');
             const idleButtonHtml = '<i class="fas fa-upload text-xs" aria-hidden="true"></i> Save to Google Drive';
             const name = document.getElementById('videoSenderName')?.value;
             const note = document.getElementById('videoNote')?.value;
             const fileInput = document.getElementById('videoFile');
-            const detailsText = document.getElementById('videoSavedDetails');
 
             if (!fileInput.files || !fileInput.files[0]) return;
             if (submitBtn?.disabled) return;
@@ -1017,41 +1014,43 @@
                 errorMessage.classList.add('hidden');
                 errorMessage.textContent = '';
             }
-            setSubmissionButtonState(submitBtn, true, idleButtonHtml, 'Uploading to Google Drive...');
+            setSubmissionButtonState(submitBtn, true, idleButtonHtml, 'Preparing secure upload...');
 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                if (typeof reader.result !== 'string') {
-                    showVideoUploadError();
-                    return;
-                }
-                const base64Data = reader.result.split(',')[1];
-                const payload = {
-                    action: 'video',
-                    filename: file.name,
-                    mimeType: file.type,
-                    data: base64Data,
-                    senderName: name,
-                    note: note
-                };
-
-                fetch(GOOGLE_SCRIPT_URL, {
+            try {
+                const initResponse = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                })
-                .then(() => {
-                    finalizeVideoSuccess(name);
-                })
-                .catch(err => {
-                    showVideoUploadError(err);
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'getUploadUrl',
+                        filename: file.name,
+                        mimeType: file.type || 'application/octet-stream',
+                        senderName: name,
+                        note: note
+                    })
                 });
-            };
-            reader.onerror = function () {
-                showVideoUploadError(reader.error);
-            };
+                if (!initResponse.ok) {
+                    throw new Error(`Upload initialization failed (${initResponse.status}).`);
+                }
+
+                const initResult = await initResponse.json();
+                if (initResult.status !== 'success' || !initResult.uploadUrl) {
+                    throw new Error(initResult.message || 'Could not initialize direct upload.');
+                }
+
+                setSubmissionButtonState(submitBtn, true, idleButtonHtml, 'Uploading to Google Drive...');
+                const uploadResponse = await fetch(initResult.uploadUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': file.type || 'application/octet-stream' },
+                    body: file
+                });
+                if (!uploadResponse.ok) {
+                    throw new Error(`Google Drive upload failed (${uploadResponse.status}).`);
+                }
+
+                finalizeVideoSuccess(name);
+            } catch (error) {
+                showVideoUploadError(error);
+            }
         }
 
         function showVideoUploadError(error) {
