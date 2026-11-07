@@ -267,6 +267,18 @@
             z-index: 30;
         }
 
+        .blessing-prompt {
+            position: absolute;
+            top: 72.5%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            white-space: nowrap;
+            pointer-events: none;
+            font-size: 7px;
+            line-height: 9px;
+        }
+
         .paper-card {
             background: rgba(255, 253, 250, 0.95);
             border: 1px solid #E2D7C5;
@@ -355,8 +367,8 @@
             <button onclick="toggleWaxSeal(event)" id="waxSealBtn" class="wax-seal-hotspot" title="Tap Wax Seal for Blessing"></button>
 
             <!-- Text Prompt below Wax Seal Target -->
-            <div class="mt-auto mb-10 z-20 text-center">
-                <span class="text-[8px] font-cinzel tracking-wider text-[#C5A059] bg-[#FAF7F2]/95 px-2.5 py-0.5 rounded-full border border-[#C5A059]/40 font-semibold shadow-xs">
+            <div class="blessing-prompt text-center">
+                <span class="text-[7px] leading-none font-cinzel tracking-wider text-[#C5A059] bg-[#FAF7F2]/95 px-2 py-0 rounded-full border border-[#C5A059]/40 font-semibold shadow-xs">
                     PRESS SEAL TO UNVEIL BLESSING
                 </span>
             </div>
@@ -572,6 +584,10 @@
                 </div>
                 <h3 class="font-serif text-lg font-bold text-hydrangea-500">Response Saved!</h3>
                 <p class="text-xs text-earth-500 leading-relaxed" id="savedDetailsText"></p>
+                <p class="text-xs text-earth-500 leading-relaxed">Need to change your answer? Update your RSVP using the same email address and your existing response will be replaced.</p>
+                <button type="button" onclick="editRSVP()" class="w-full py-2.5 px-4 rounded-lg border border-hydrangea-300 text-hydrangea-500 font-cinzel text-xs uppercase tracking-wider hover:bg-hydrangea-50 transition-all">
+                    Update RSVP
+                </button>
             </div>
         </section>
 
@@ -910,6 +926,11 @@
                     detailsText.textContent = `Thank you, ${name}! Your RSVP confirmation (${attendance}) has been submitted.`;
                 }
             }
+        }
+
+        function editRSVP() {
+            document.getElementById('rsvpForm')?.classList.remove('hidden');
+            document.getElementById('rsvpConfirmation')?.classList.add('hidden');
         }
 
         async function handleRecipeSubmit(e) {
