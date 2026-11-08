@@ -645,7 +645,23 @@
                 <div class="w-10 h-[1px] bg-hydrangea-300 mx-auto mt-2"></div>
             </div>
 
+            <div class="paper-card p-5 rounded-xl mb-4 text-center space-y-3">
+                <h3 class="font-serif text-lg font-bold text-hydrangea-500">Option 1: Faster upload with Google Forms</h3>
+                <p class="text-xs text-earth-500 leading-relaxed">For a faster video upload, use our Google Form. Google may require you to sign in to upload, but we will not collect your email address.</p>
+                <a href="https://forms.gle/oBESVW1qq5diZ61p7" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 bg-hydrangea-500 hover:bg-hydrangea-900 text-white font-cinzel font-semibold text-xs uppercase tracking-widest rounded-lg transition-all shadow-sm inline-flex items-center justify-center gap-2">
+                    <i class="fab fa-google-drive" aria-hidden="true"></i> Upload faster with Google Forms
+                    <i class="fas fa-external-link-alt text-[10px]" aria-hidden="true"></i>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-3 my-4 text-[10px] font-cinzel tracking-widest text-earth-500 uppercase">
+                <span class="h-px flex-1 bg-hydrangea-200"></span>
+                <span>Or use the website uploader</span>
+                <span class="h-px flex-1 bg-hydrangea-200"></span>
+            </div>
+
             <form id="videoUploadForm" onsubmit="handleVideoUpload(event)" class="paper-card p-5 rounded-xl space-y-4">
+                <h3 class="text-center font-serif text-lg font-bold text-hydrangea-500">Option 2: Upload here</h3>
                 <div>
                     <label class="block text-xs font-cinzel text-earth-500 mb-1">Your Name *</label>
                     <input type="text" id="videoSenderName" required placeholder="e.g. Aunt Beatrice" class="w-full px-3 py-2 rounded-lg bg-linen border border-hydrangea-200 text-xs text-earth-900 focus:outline-none focus:border-hydrangea-400">
