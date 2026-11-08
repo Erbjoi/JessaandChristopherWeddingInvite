@@ -1009,6 +1009,10 @@
             if (!fileInput.files || !fileInput.files[0]) return;
             if (submitBtn?.disabled) return;
             const file = fileInput.files[0];
+            if (file.size === 0) {
+                showVideoUploadError(new Error('The selected video file is empty.'), 'initialization');
+                return;
+            }
 
             if (errorMessage) {
                 errorMessage.classList.add('hidden');
@@ -1038,15 +1042,38 @@
                     throw new Error(initResult.message || 'Could not initialize direct upload.');
                 }
 
-                uploadStage = 'Google Drive upload';
-                setSubmissionButtonState(submitBtn, true, idleButtonHtml, 'Uploading to Google Drive...');
-                const uploadResponse = await fetch(initResult.uploadUrl, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': file.type || 'application/octet-stream' },
-                    body: file
-                });
-                if (!uploadResponse.ok) {
-                    throw new Error(`Google Drive upload failed (${uploadResponse.status}).`);
+                uploadStage = 'Apps Script chunk upload';
+                const chunkSize = 5 * 1024 * 1024;
+                for (let start = 0; start < file.size; start += chunkSize) {
+                    const end = Math.min(start + chunkSize, file.size);
+                    const chunk = new Uint8Array(await file.slice(start, end).arrayBuffer());
+                    let binary = '';
+                    for (let offset = 0; offset < chunk.length; offset += 0x8000) {
+                        binary += String.fromCharCode(...chunk.subarray(offset, Math.min(offset + 0x8000, chunk.length)));
+                    }
+                    const chunkResponse = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({
+                            action: 'uploadChunk',
+                            uploadUrl: initResult.uploadUrl,
+                            chunkData: btoa(binary),
+                            start: start,
+                            end: end - 1,
+                            totalSize: file.size
+                        })
+                    });
+                    if (!chunkResponse.ok) {
+                        throw new Error(`Upload service returned ${chunkResponse.status} for chunk starting at byte ${start}.`);
+                    }
+
+                    const chunkResult = await chunkResponse.json();
+                    if (chunkResult.status !== 'success' && chunkResult.status !== 'in_progress') {
+                        throw new Error(chunkResult.message || `Could not upload chunk starting at byte ${start}.`);
+                    }
+
+                    const percent = Math.round((end / file.size) * 100);
+                    setSubmissionButtonState(submitBtn, true, idleButtonHtml, `Uploading video... ${percent}%`);
                 }
 
                 finalizeVideoSuccess(name);
@@ -1067,7 +1094,7 @@
             if (errorMessage) {
                 errorMessage.textContent = stage === 'initialization'
                     ? 'We could not start the upload. Check that the Apps Script web app is deployed with access for guests, then try again.'
-                    : 'Google Drive could not receive the video. Check Drive storage and upload quotas, then try again.';
+                    : `The upload service could not send the video to Google Drive. ${error?.message || 'Check Apps Script execution logs, Drive storage, and upload quotas.'}`;
                 errorMessage.classList.remove('hidden');
             }
         }
